@@ -1,10 +1,9 @@
 //base class User
 class User {
-    constructor(id, name, email, pass, role) {
+    constructor(id, name, email, role) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.pass = pass;
         this.role = role;
     }
 }
