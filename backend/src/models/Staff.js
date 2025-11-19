@@ -1,23 +1,29 @@
-import User from "./User.js";
+import pool from '../Database.js';
 
-class Staff extends User {
-    constructor(id, name, email) {
-        super(id, name, email);
-    }
+
+class Staff {
 
     markedOrderAsReceived(orderId) {}
     markedOrderAsPrepared(orderId) {}
     
-    createMenuItem(name, price, quantity) {
-        //logic to create a new menu item
+    static async createMenuItem(name, price, quantity) {
+        const result = await pool.query(
+            'INSERT INTO menu (item_name, price, quantity) VALUES ($1, $2, $3) RETURNING id, item_name, price, quantity',
+            [name, price, quantity]
+        );
+        return result.rows[0];
     }
 
-    updateMenuItem(itemId) {
-        //logic to update an existing menu item
+    static async updateMenuItemName(itemId, newName) {
+        await pool.query('INSERT INTO menu (item_name) VALUES ($1) WHERE id = $2', [newName, itemId]);
     }
 
-    deleteMenuItem(itemId) {
-        //logic to delete a menu item
+    static async updateMenuItemPrice(itemId, newPrice) {
+        await pool.query('INSERT INTO menu (price) VALUES ($1) WHERE id = $2', [newPrice, itemId]);
+    }
+
+    static async deleteMenuItem(itemId) {
+        await pool.query('DELETE FROM menu WHERE id = $1', [itemId]);
     }
     
 

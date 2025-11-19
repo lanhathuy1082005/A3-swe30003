@@ -1,30 +1,41 @@
 import pool from '../Database.js';
 
 class Order {
-    constructor(orderId, customerId) {
-        this.orderId = orderId;
-        this.customerId = customerId;
-        this.items = []; // Array of item objects
-        this.totalAmount = 0; //set to 0 initially
-        this.order_status = 'Pending'; // Default status
-        this.payment_status = 'Unpaid'; // Default payment status
+
+    static async createOrder(customer_id, final_price, payment_method) {
+    const order = await pool.query('INSERT INTO orders (customer_id, final_price, payment_method) VALUES ($1, $2, $3) RETURNING *'
+        ,[customer_id, final_price, payment_method]);
+    return order.rows[0];
     }
 
-    markOrderAsConfirmed() {
-        this.order_status = 'Confirmed';
+    static async updateOrderFinalPrice(orderId, finalPrice) {
+    const result = await pool.query(
+    `UPDATE orders 
+     SET final_price = $1 
+     WHERE id = $2 
+     RETURNING *`,
+    [finalPrice, orderId]
+    );
+    return result.rows[0];
     }
 
-    
+    static async updateOrderStatus(orderId, status) {
+    const result = await pool.query(
+    `UPDATE orders 
+     SET order_status = $1 
+     WHERE id = $2 
+     RETURNING *`,
+    [status, orderId]
+    );
+    return result.rows[0];
+    }
+
 
 
 }
 
-async function getAllMenuItems() {
-  const res = await pool.query('SELECT * FROM menu');
-  console.log(res.rows);
-}
 
-getAllMenuItems();
+
 
 
 export default Order;

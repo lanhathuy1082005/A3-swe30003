@@ -1,7 +1,7 @@
 function Feedback() {
   return (
     <div>
-      <h1>Welcome to the Create Page</h1>
+      <h1>Welcome to the Feedback Page</h1>
     </div>
   );
 }
