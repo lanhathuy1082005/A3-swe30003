@@ -3,6 +3,7 @@ import pool from '../Database.js';
 
 class OrderItem{
 
+    //need splitting
     static async createOrderItem(itemId, orderId, quantity) {
         try {
         const priceResult = await pool.query('SELECT price FROM menu WHERE id = $1', [itemId]); 

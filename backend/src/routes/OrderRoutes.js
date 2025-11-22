@@ -1,7 +1,7 @@
 import express from 'express';
+import { requirePermission } from '../middleware/AuthMiddleware.js';
 import { placeOrder} from '../controllers/OrderController.js';
 import { validatePlaceOrder } from '../middleware/OrderValidator.js';
-const orderRoutes = express.Router();
+export const orderRoutes = express.Router();
 
-orderRoutes.post('/', validatePlaceOrder, placeOrder);
-export default orderRoutes;
+orderRoutes.post('/', requirePermission("purchase_items"), validatePlaceOrder, placeOrder);

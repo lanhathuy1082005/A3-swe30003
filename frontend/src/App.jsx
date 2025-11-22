@@ -6,24 +6,58 @@ import Login from './components/Login.jsx'
 import Feedback from './components/Feedback.jsx'
 import Register from './components/Register.jsx'
 import Cart from './components/Cart.jsx'
-import {useState} from 'react'
+import {useState,useEffect} from 'react'
 
 function App() {
-  const [isStaff, setIsStaff] = useState(false);
+
+  const [user,setUser] = useState({id:null,email:"",name:"",permissions:[]});
   const [orderItems, setOrderItems] = useState([]); 
   const [isLoggedin, setIsLoggedin] = useState(false);
+  const [warningCounter,setWarningCounter] = useState(0);
+  const [menuItems, setMenuItems] = useState([]);
+
+useEffect(() => {
+    let mounted = true;
+
+    const checkSession = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/user/session", {
+          credentials: "include"
+        });
+
+        if (!mounted) return;
+
+        const data = await res.json();
+
+        if (res.ok) {
+          setIsLoggedin(true);
+          setUser(data);
+          console.log(data);
+        } else {
+          console.log("No active session");
+        }
+      } catch (error) {
+        console.error("Session check failed:", error);
+      }
+    };
+
+    checkSession();
+
+    return () => { mounted = false };
+  }, []);
 
   return (
     <>   
       <Router>
-        <Header isLoggedin={isLoggedin} />
+        <Header isLoggedin={isLoggedin}  setIsLoggedin={setIsLoggedin} user={user} setUser={setUser} warningCounter={warningCounter}/>
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/order" element={<Order orderItems={orderItems} setOrderItems={setOrderItems} />} />
-          <Route path="/login" element={<Login isStaff={isStaff} setIsStaff={setIsStaff} />} />
-          <Route path="/feedback" element={<Feedback/>} />
-          <Route path="/register" element={<Register isStaff={isStaff} setIsStaff={setIsStaff} />} />
+          <Route path="/order" element={<Order user={user} orderItems={orderItems} 
+          setOrderItems={setOrderItems} menuItems={menuItems} setMenuItems={setMenuItems} setWarningCounter={setWarningCounter}/>} />
+          <Route path="/login" element={!isLoggedin && <Login setUser = {setUser} setIsLoggedin={setIsLoggedin}/>} />
+          <Route path="/feedback" element={<Feedback user={user}/>} />
+          <Route path="/register" element={!isLoggedin && <Register/>} />
           <Route path="/cart" element={<Cart orderItems={orderItems} setOrderItems={setOrderItems}/>} />
         </Routes>
 

@@ -1,8 +1,8 @@
 import PointRedeemStrategy from './PointRedeemStrategy.js';
-class AHundredOrLowerPointRedeemStrategy extends PointRedeemStrategy {
+class TierOneStrategy extends PointRedeemStrategy {
     redeemPoints(){
         throw new Error("Method 'redeemPoints()' must be implemented.");
     }
 }
 
-export default AHundredOrLowerPointRedeemStrategy;
+export default TierOneStrategy;

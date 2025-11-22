@@ -15,7 +15,6 @@ const confirmCheckout = async () => {
       body: JSON.stringify({ customer_id: 1, items: orderItems, payment_method: 'card' }),
     });
 
-    console.log({ customer_id: 1, items: orderItems, payment_method: 'card' })
     const data = await response.json(); 
     if (response.ok) {   
     console.log("Checkout success:", data.message);
