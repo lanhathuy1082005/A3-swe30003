@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Form, Table, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-function Promotion() {
-  const [promotions, setPromotions] = useState([]);
-  const [menuItems, setMenuItems] = useState([]);
+function Promotion({menuItems, setMenuItems,promotions, setPromotions}) {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     type: 'percentage',
@@ -212,7 +210,6 @@ function Promotion() {
                   </Form.Group>
                 </Col>
 
-                {/* Show menu item selector if not global */}
                 {!formData.is_global && (
                   <Col md={12}>
                     <Form.Group className="mb-3">

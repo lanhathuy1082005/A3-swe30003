@@ -71,7 +71,7 @@ export const updateOrderStatus = async (req, res) => {
 export const cancelOrder = async (req, res) => {
     try {
         const { order_id } = req.params;
-        const customer_id = req.session.userId;
+        const customer_id = req.session.user.id;
         
         await OrderService.cancelOrder(order_id, customer_id);
         

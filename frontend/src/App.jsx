@@ -14,6 +14,7 @@ import {useState,useEffect} from 'react'
 function App() {
 
   const [user,setUser] = useState({id:null,email:"",name:"",permissions:[]});
+  const [promotions, setPromotions] = useState([]);
   const [orderItems, setOrderItems] = useState([]); 
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [warningCounter,setWarningCounter] = useState(0);
@@ -57,7 +58,8 @@ useEffect(() => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/payment" element={<Payment orderItems={orderItems} setOrderItems={setOrderItems} user={user}/>} />
-          <Route path="/promotion" element={user.permissions.includes("edit_menu") && <Promotion menuItems={menuItems} setMenuItems={setMenuItems} />} />
+          <Route path="/promotion" element={user.permissions.includes("edit_menu") 
+          && <Promotion menuItems={menuItems} setMenuItems={setMenuItems} promotions={promotions} setPromotions={setPromotions}/>} />
           <Route path="/order" element={<Order user={user} orderItems={orderItems} 
             setOrderItems={setOrderItems} menuItems={menuItems} setMenuItems={setMenuItems} setWarningCounter={setWarningCounter}/>} />
           <Route path="/login" element={!isLoggedin && <Login setUser={setUser} setIsLoggedin={setIsLoggedin}/>} />

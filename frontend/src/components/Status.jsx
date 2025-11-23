@@ -196,7 +196,6 @@ function Status({ user }) {
                     {getStatusBadge(order.order_status)}
                   </div>
 
-                  {/* CUSTOMER VIEW - Can only cancel if pending/preparing */}
                   {!isStaff && canCustomerCancel(order.order_status) && (
                     <Button 
                       variant="outline-danger" 
@@ -207,7 +206,6 @@ function Status({ user }) {
                     </Button>
                   )}
 
-                  {/* CUSTOMER VIEW - Show status message for non-cancellable orders */}
                   {!isStaff && !canCustomerCancel(order.order_status) && (
                     <p className="text-muted small mb-0">
                       {order.order_status === 'delivering' && '🚚 Your order is on the way!'}
@@ -216,7 +214,6 @@ function Status({ user }) {
                     </p>
                   )}
 
-                  {/* STAFF VIEW - Can change status: pending -> preparing -> delivering -> completed */}
                   {isStaff && (
                     <div className="d-grid gap-2">
                       {order.order_status === 'pending' && (
