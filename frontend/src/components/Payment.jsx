@@ -128,12 +128,18 @@ function Payment({ orderItems, setOrderItems, user }) {
       
       if (response.ok) {   
         console.log("Checkout success:", data);
+        const orderId = data.order.orderId;
         setOrderItems([]);
-        alert(`Payment successful! Order #${data.order.orderId}\nTotal: $${data.order.final_price}\nPoints earned: ${data.order.points_earned}`);
         setShowModal(false);
         setPaymentMethod(null);
         setSelectedPromotion(null);
-        navigate('/status');
+        
+        // Show success message and ask for feedback
+        if (window.confirm(`Payment successful! Order #${orderId}\nTotal: ${data.order.final_price}\nPoints earned: ${data.order.points_earned}\n\nWould you like to leave feedback?`)) {
+          navigate('/feedback', { state: { orderId } });
+        } else {
+          navigate('/status');
+        }
       } else {
         alert('Checkout failed: ' + data.message);
       }

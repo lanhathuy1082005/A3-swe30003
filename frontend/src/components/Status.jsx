@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Card, Button, Badge, Row, Col, ListGroup, Alert } from 'react-bootstrap';
+import { Container, Card, Button, Badge, Row, Col, ListGroup, Spinner, Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 function Status({ user }) {
@@ -26,7 +26,6 @@ function Status({ user }) {
         }
 
         const data = await response.json();
-        console.log(data);
         setOrders(data);
 
         // Fetch details for each order
@@ -196,6 +195,7 @@ function Status({ user }) {
                     {getStatusBadge(order.order_status)}
                   </div>
 
+                  {/* CUSTOMER VIEW - Can only cancel if pending/preparing */}
                   {!isStaff && canCustomerCancel(order.order_status) && (
                     <Button 
                       variant="outline-danger" 
@@ -206,14 +206,29 @@ function Status({ user }) {
                     </Button>
                   )}
 
+                  {/* CUSTOMER VIEW - Show status message for non-cancellable orders */}
                   {!isStaff && !canCustomerCancel(order.order_status) && (
-                    <p className="text-muted small mb-0">
-                      {order.order_status === 'delivering' && '🚚 Your order is on the way!'}
-                      {order.order_status === 'completed' && '✅ Order completed'}
-                      {order.order_status === 'cancelled' && '❌ Order was cancelled'}
-                    </p>
+                    <>
+                      <p className="text-muted small mb-2">
+                        {order.order_status === 'delivering' && '🚚 Your order is on the way!'}
+                        {order.order_status === 'completed' && '✅ Order completed'}
+                        {order.order_status === 'cancelled' && '❌ Order was cancelled'}
+                      </p>
+                      {order.order_status === 'completed' && (
+                        <Button 
+                          variant="outline-primary" 
+                          size="sm"
+                          as={Link}
+                          to="/feedback"
+                          state={{ orderId: order.id }}
+                        >
+                          Leave Feedback
+                        </Button>
+                      )}
+                    </>
                   )}
 
+                  {/* STAFF VIEW - Can change status: pending -> preparing -> delivering -> completed */}
                   {isStaff && (
                     <div className="d-grid gap-2">
                       {order.order_status === 'pending' && (

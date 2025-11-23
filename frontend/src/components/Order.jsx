@@ -18,8 +18,8 @@ function Order({user, orderItems, setOrderItems, setWarningCounter}) {
     const [newItemName, setNewItemName] = useState('');
     const [newPrice, setNewPrice] = useState(null);
     const [newQuantity, setNewQuantity] = useState(null);
-    const [loadingItems, setLoadingItems] = useState(new Set()); // Track loading per item
-    const [isModalLoading, setIsModalLoading] = useState(false); // For modal operations
+    const [loadingItems, setLoadingItems] = useState(new Set());
+    const [isModalLoading, setIsModalLoading] = useState(false);
     const LOW_STOCK_THRESHOLD = 5;
 
   
@@ -37,7 +37,6 @@ function Order({user, orderItems, setOrderItems, setWarningCounter}) {
     fetchMenuItems();
   }, []);
 
-  // Check for low stock items whenever menuItems changes
   useEffect(() => {
     if (user.permissions && user.permissions.includes("edit_menu")) {
       const lowStockCount = menuItems.filter(item => item.quantity <= LOW_STOCK_THRESHOLD).length;
@@ -99,8 +98,8 @@ function Order({user, orderItems, setOrderItems, setWarningCounter}) {
     console.log('Edit clicked for item:', item);
     setEditingItem(item);
     setNewItemName(item.item_name);
-    setNewPrice(item.price);
-    setNewQuantity(item.quantity);
+    setNewPrice(parseFloat(item.price));
+    setNewQuantity(parseInt(item.quantity));
     setShowEdit(true);
   };
 
@@ -120,7 +119,7 @@ function Order({user, orderItems, setOrderItems, setWarningCounter}) {
   };
 
   const updateItem = async () => {
-    if (isModalLoading || !editingItem) return; // Added null check
+    if (isModalLoading || !editingItem) return;
     setIsModalLoading(true);
     console.log('Updating item:', editingItem.id);
     try {
@@ -194,6 +193,10 @@ function Order({user, orderItems, setOrderItems, setWarningCounter}) {
   const removeItem = async (id) => {
     if (loadingItems.has(id)) return;
     
+    if (!window.confirm('Are you sure you want to remove this item from the menu?')) {
+      return;
+    }
+    
     setLoadingItems(prev => new Set([...prev, id]));
     console.log('Removing item:', id);
     try {
@@ -207,11 +210,15 @@ function Order({user, orderItems, setOrderItems, setWarningCounter}) {
         const updatedResponse = await fetch('http://localhost:3000/menu');
         const updatedData = await updatedResponse.json();
         setMenuItems(updatedData);
+        alert('Item removed successfully!');
       } else {
+        const errorData = await response.json();
         console.error('Remove failed with status:', response.status);
+        alert(errorData.message || 'Failed to remove item');
       }
     } catch (error) {
       console.error('Error removing item:', error);
+      alert('Error removing item. Please try again.');
     } finally {
       setLoadingItems(prev => {
         const newSet = new Set(prev);
@@ -246,9 +253,13 @@ function Order({user, orderItems, setOrderItems, setWarningCounter}) {
               <Form.Label>Price:</Form.Label>
               <Form.Control
                 type="number"
+                step="0.01"
                 placeholder="Enter a new price"
-                value={newPrice || ''}
-                onChange={e => setNewPrice(parseInt(e.target.value))}
+                value={newPrice === null ? '' : newPrice}
+                onChange={e => {
+                  const value = e.target.value;
+                  setNewPrice(value === '' ? null : parseFloat(value));
+                }}
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -294,10 +305,13 @@ function Order({user, orderItems, setOrderItems, setWarningCounter}) {
               <Form.Label>Price:</Form.Label>
               <Form.Control
                 type="number"
+                step="0.01"
                 placeholder="Enter a new price"
-                step={0.01}
-                value={newPrice || ''}
-                onChange={e => setNewPrice(parseFloat(e.target.value))}
+                value={newPrice === null ? '' : newPrice}
+                onChange={e => {
+                  const value = e.target.value;
+                  setNewPrice(value === '' ? null : parseFloat(value));
+                }}
               />
             </Form.Group>
             <Form.Group className="mb-3">

@@ -22,7 +22,7 @@ export const addItem = async (req,res) => {
 
 export const updateItem = async (req,res) => {
   try {
-    const id = req.params.id
+    const {id} = req.params
     const {item_name, price, quantity} = req.body
 
     await MenuItemService.updateMenuItem(id,item_name,price,quantity)
@@ -36,7 +36,7 @@ export const updateItem = async (req,res) => {
 export const removeItem = async (req,res) => {
   try {
 
-    const id = req.params.id
+    const {id} = req.params
     console.log(id)
     await MenuItemService.removeMenuItem(id)
     res.status(200).json({message: "ok"})

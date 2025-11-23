@@ -56,7 +56,7 @@ useEffect(() => {
         <Header isLoggedin={isLoggedin}  setIsLoggedin={setIsLoggedin} user={user} setUser={setUser} warningCounter={warningCounter}/>
 
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home user={user} promotions={promotions}/>} />
           <Route path="/payment" element={<Payment orderItems={orderItems} setOrderItems={setOrderItems} user={user}/>} />
           <Route path="/promotion" element={user.permissions.includes("edit_menu") 
           && <Promotion menuItems={menuItems} setMenuItems={setMenuItems} promotions={promotions} setPromotions={setPromotions}/>} />

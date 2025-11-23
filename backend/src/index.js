@@ -7,6 +7,7 @@ import {userRoutes} from './routes/UserRoutes.js';
 import {menuItemRoutes} from './routes/MenuItemRoutes.js';
 import {orderRoutes} from './routes/OrderRoutes.js';
 import {promotionRoutes} from './routes/PromotionRoutes.js';
+import {feedbackRoutes} from './routes/FeedbackRoutes.js';
 
 app.use(express.json());
 app.use(session({
@@ -21,5 +22,6 @@ app.use('/user', userRoutes);
 app.use('/menu', menuItemRoutes);
 app.use('/orders', orderRoutes);
 app.use('/promotion', promotionRoutes);
+app.use('/feedback', feedbackRoutes);
 
 app.listen(3000, () => console.log('Connected to server on port 3000...'));

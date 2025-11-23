@@ -37,15 +37,16 @@ function Header({user, setUser, isLoggedin, setIsLoggedin, warningCounter}) {
             {user.permissions && user.permissions.includes("edit_menu") && (
               <Nav.Link as={Link} to="/promotion">Promotions</Nav.Link>
             )}
-            
             {isLoggedin ? 
-            (<NavDropdown title={`Welcome, ${user.name}`} id="basic-nav-dropdown">
+            (<><Nav.Link as={Link} to="/feedback">Feedback</Nav.Link>
+            <NavDropdown title={`Welcome, ${user.name}`} id="basic-nav-dropdown">
               <NavDropdown.Item as={Link} to="/status">Order Status</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={handleLogout}>
                 Logout
               </NavDropdown.Item>
-            </NavDropdown>) : 
+            </NavDropdown>
+            </>) : 
             (<Nav.Link as={Link} to="/login">Login</Nav.Link>)}
           </Nav>
         </Navbar.Collapse>
