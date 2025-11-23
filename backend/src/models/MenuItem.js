@@ -37,6 +37,11 @@ class MenuItem {
     return result.rows[0];
   }
 
+  static async getMenuItemById(itemId){
+    const result = await pool.query(`SELECT * FROM menu WHERE id =$1`,[itemId]);
+    return result.rows[0];
+  }
+
   static async updateMenuItemQuantity(itemId, newQuantity) {
     const result = await pool.query(
       `UPDATE menu 

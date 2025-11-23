@@ -55,6 +55,7 @@ function Order({user, orderItems, setOrderItems, setWarningCounter}) {
             const newItem = { 
               id, 
               item_name: menuItems.find(item => item.id === id)?.item_name || '', 
+              price: menuItems.find(item => item.id === id)?.price || '',
               quantity: 1 
             };
             console.log('Adding new item:', newItem);

@@ -6,6 +6,9 @@ import Login from './components/Login.jsx'
 import Feedback from './components/Feedback.jsx'
 import Register from './components/Register.jsx'
 import Cart from './components/Cart.jsx'
+import Payment from './components/Payment.jsx'
+import Promotion from './components/Promotion.jsx'
+import Status from './components/Status.jsx'
 import {useState,useEffect} from 'react'
 
 function App() {
@@ -53,12 +56,19 @@ useEffect(() => {
 
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/payment" element={<Payment orderItems={orderItems} setOrderItems={setOrderItems} user={user}/>} />
+          <Route path="/promotion" element={user.permissions.includes("edit_menu") && <Promotion menuItems={menuItems} setMenuItems={setMenuItems} />} />
           <Route path="/order" element={<Order user={user} orderItems={orderItems} 
-          setOrderItems={setOrderItems} menuItems={menuItems} setMenuItems={setMenuItems} setWarningCounter={setWarningCounter}/>} />
-          <Route path="/login" element={!isLoggedin && <Login setUser = {setUser} setIsLoggedin={setIsLoggedin}/>} />
+            setOrderItems={setOrderItems} menuItems={menuItems} setMenuItems={setMenuItems} setWarningCounter={setWarningCounter}/>} />
+          <Route path="/login" element={!isLoggedin && <Login setUser={setUser} setIsLoggedin={setIsLoggedin}/>} />
           <Route path="/feedback" element={<Feedback user={user}/>} />
           <Route path="/register" element={!isLoggedin && <Register/>} />
           <Route path="/cart" element={<Cart orderItems={orderItems} setOrderItems={setOrderItems}/>} />
+          <Route path="/status" element={
+            (user.permissions?.includes('purchase_items') || user.permissions?.includes('update_order_status')) 
+              ? <Status user={user} /> 
+              : <Home />
+          } />
         </Routes>
 
       </Router>

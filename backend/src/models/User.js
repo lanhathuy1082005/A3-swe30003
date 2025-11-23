@@ -23,6 +23,15 @@ class User {
         return result.rows;
     }
 
+    static async updateLoyaltyPoints(userId, points) {
+    const result = await pool.query(
+        'UPDATE users SET loyalty_points = loyalty_points + $1 WHERE id = $2 RETURNING *',
+        [points, userId]
+    );
+    return result.rows[0];
+}
+
+
 
 
 }
