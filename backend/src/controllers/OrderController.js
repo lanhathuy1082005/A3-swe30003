@@ -20,9 +20,19 @@ export const placeOrder = async (req, res) => {
 export const getOrders = async (req, res) => {
     try {
         const { user_id } = req.params;
-        const isStaff = req.session.permissions && req.session.permissions.includes('update_order_status');
+        const isStaff = req.session.user.permissions && req.session.user.permissions.includes('update_order_status');
         
-        const orders = await OrderService.getOrders(user_id, isStaff);
+        let orders;
+
+        if (isStaff && !user_id) {
+            orders = await OrderService.getAllOrders();
+        } 
+        else if (user_id) {
+            orders = await OrderService.getOrdersByUserId(user_id);
+        }
+        else {
+            return res.status(400).json({ message: 'User ID is required' });
+        }
 
         return res.status(200).json(orders);
     } catch (err) {

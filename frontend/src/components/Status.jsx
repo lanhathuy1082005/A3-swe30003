@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Card, Button, Badge, Row, Col, ListGroup, Spinner, Alert } from 'react-bootstrap';
+import { Container, Card, Button, Badge, Row, Col, ListGroup, Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 function Status({ user }) {
@@ -9,11 +9,15 @@ function Status({ user }) {
   const isStaff = user.permissions && user.permissions.includes('update_order_status');
   const canPurchase = user.permissions && user.permissions.includes('purchase_items');
 
-useEffect(() => {
+  useEffect(() => {
     const fetchOrders = async () => {
       try {
-        // Fixed: Use /orders/user/:user_id
-        const response = await fetch(`http://localhost:3000/orders/user/${user.id}`, {
+        // If staff, fetch all orders; otherwise fetch user's orders
+        const url = isStaff 
+          ? `http://localhost:3000/orders/all`
+          : `http://localhost:3000/orders/user/${user.id}`;
+        
+        const response = await fetch(url, {
           credentials: 'include'
         });
         
@@ -22,6 +26,7 @@ useEffect(() => {
         }
 
         const data = await response.json();
+        console.log(data);
         setOrders(data);
 
         // Fetch details for each order
@@ -49,7 +54,7 @@ useEffect(() => {
     if (user.id) {
       fetchOrders();
     }
-  }, [user.id]);
+  }, [user.id, isStaff]);
 
   // Customer: Cancel order (only pending/preparing)
   const handleCancel = async (orderId) => {

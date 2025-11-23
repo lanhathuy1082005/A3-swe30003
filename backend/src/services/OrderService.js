@@ -180,12 +180,14 @@ export default class OrderService {
         return discount;
     }
 
-    static async getOrders(userId, isStaff) {
-        if (isStaff) {
-            return await Order.getAllOrders();
-        } else {
-            return await Order.getOrdersByCustomerId(userId);
-        }
+    // Get all orders (for staff)
+    static async getAllOrders() {
+        return await Order.getAllOrders();
+    }
+
+    // Get orders by user ID (for customers and staff viewing specific user)
+    static async getOrdersByUserId(userId) {
+        return await Order.getOrdersByCustomerId(userId);
     }
 
     static async getOrderDetails(orderId) {
