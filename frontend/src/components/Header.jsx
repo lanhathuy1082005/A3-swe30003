@@ -20,6 +20,7 @@ function Header({user, setUser, isLoggedin, setIsLoggedin, warningCounter}) {
   return (
     <>
     <Navbar expand="lg" className="bg-body-tertiary">
+        <img src="logo.jpg" alt="description" style={{ width: '40px', height: '40px', marginRight: '10px' }} />
         <Navbar.Brand as={Link} to="/">HC-CMS</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
