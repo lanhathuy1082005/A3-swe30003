@@ -60,7 +60,7 @@ useEffect(() => {
           <Route path="/payment" element={<Payment orderItems={orderItems} setOrderItems={setOrderItems} user={user}/>} />
           <Route path="/promotion" element={user.permissions.includes("edit_menu") 
           && <Promotion menuItems={menuItems} setMenuItems={setMenuItems} promotions={promotions} setPromotions={setPromotions}/>} />
-          <Route path="/order" element={<Order user={user} orderItems={orderItems} 
+          <Route path="/order" element={<Order user={user} isLoggedIn={isLoggedin} orderItems={orderItems} 
             setOrderItems={setOrderItems} menuItems={menuItems} setMenuItems={setMenuItems} setWarningCounter={setWarningCounter}/>} />
           <Route path="/login" element={!isLoggedin && <Login setUser={setUser} setIsLoggedin={setIsLoggedin}/>} />
           <Route path="/feedback" element={<Feedback user={user}/>} />

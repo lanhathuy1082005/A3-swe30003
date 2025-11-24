@@ -10,7 +10,7 @@ import Col from 'react-bootstrap/Col';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 
-function Order({user, orderItems, setOrderItems, setWarningCounter}) {
+function Order({user, isLoggedIn, orderItems, setOrderItems, setWarningCounter}) {
     const [menuItems, setMenuItems] = useState([]);
     const [showEdit, setShowEdit] = useState(false);
     const [showAdd, setShowAdd] = useState(false);
@@ -44,6 +44,13 @@ function Order({user, orderItems, setOrderItems, setWarningCounter}) {
       console.log('Warning counter updated:', lowStockCount);
     }
   }, [menuItems, user.permissions, setWarningCounter]);
+
+  const handleCartClick = (e) => {
+    if (!isLoggedIn) {
+      e.preventDefault();
+      alert('Please log in to access the cart.');
+    }
+  };
 
   const addToOrder = (id, maxQuantity) => {
     console.log('addToOrder called:', id, maxQuantity);
@@ -337,7 +344,7 @@ function Order({user, orderItems, setOrderItems, setWarningCounter}) {
       </Modal>
 
       {/* Customer View - Purchase Items */}
-      {user.permissions && user.permissions.includes("purchase_items") && menuItems.map((item) => (
+      {!user.permissions.includes("edit_menu") && menuItems.map((item) => (
         <Col key={item.id} sm={12} md={6} lg={3}>
           <Card className="mt-3">
             <Card.Body>
@@ -434,7 +441,7 @@ function Order({user, orderItems, setOrderItems, setWarningCounter}) {
       </Row>
       
       {/* Cart Button */}
-      {user.permissions && user.permissions.includes("purchase_items") && orderItems.length > 0 && (
+      {orderItems.length > 0 && (
         <Button
           variant="primary"
           style={{
@@ -451,7 +458,8 @@ function Order({user, orderItems, setOrderItems, setWarningCounter}) {
             maxWidth: "500px",
           }}
           as={Link} 
-          to="/cart"
+          to="/cart" 
+          onClick={handleCartClick}
         >
           Cart ({orderItems.length} items)
         </Button>

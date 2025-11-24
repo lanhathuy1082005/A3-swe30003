@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
@@ -7,14 +6,12 @@ import Badge from 'react-bootstrap/Badge';
 
 function Header({user, setUser, isLoggedin, setIsLoggedin, warningCounter}) {
 
-  const navigate = useNavigate()
 
   const handleLogout = async () => {
     try{
       await fetch("http://localhost:3000/user/logout",{method: 'POST', credentials: 'include'});
-      setIsLoggedin(false);
       setUser({})
-      navigate("/login");
+      setIsLoggedin(false);
     } catch(err){
       console.error(err);
     }
@@ -42,7 +39,7 @@ function Header({user, setUser, isLoggedin, setIsLoggedin, warningCounter}) {
             <NavDropdown title={`Welcome, ${user.name}`} id="basic-nav-dropdown">
               <NavDropdown.Item as={Link} to="/status">Order Status</NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item onClick={handleLogout}>
+              <NavDropdown.Item as={Link} to="/login" onClick={handleLogout}>
                 Logout
               </NavDropdown.Item>
             </NavDropdown>
